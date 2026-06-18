@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a class="brand" href="{{ url_for('home') }}">FastAPI Blog</a>
+            <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+            <div class="nav-actions">
+                <a class="btn btn-outline" href="/login">Login</a>
+                <a class="btn btn-solid" href="/register">Register</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-box">
+                <h3>Our Sidebar</h3>
+                <p class="sidebar-text">You can put any information here you'd like.</p>
+                <ul class="sidebar-list">
+                    <li><a href="#">Latest Posts</a></li>
+                    <li><a href="#">Announcements</a></li>
+                    <li><a href="#">Calendars</a></li>
+                    <li><a href="#">etc</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>

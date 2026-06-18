@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <article>
+        <div class="post-header">
+            <img class="avatar" src="{{ url_for('static', path='/img/default.jpg') }}" alt="{{ post.author }}">
+            <div>
+                <a class="post-author" href="#">{{ post.author }}</a>
+                <span class="post-date">{{ post.date_posted }}</span>
+            </div>
+        </div>
+        <h2 class="post-title">{{ post.title }}</h2>
+        <p class="post-content">{{ post.content }}</p>
+    </article>
+
+    <a class="back-link" href="{{ url_for('home') }}">&larr; Back to all posts</a>
+{% endblock %}
