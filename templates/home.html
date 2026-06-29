@@ -6,14 +6,21 @@
     {% for post in posts %}
     <article>
         <div class="post-header">
-            <img class="avatar" src="{{ url_for('static', path='/img/default.jpg') }}" alt="{{ post.author }}">
+            <img class="avatar" src="{{ url_for('static', path='/img/default.jpg') }}" alt="{{ post.user.username }}">
             <div>
-                <a class="post-author" href="#">{{ post.author }}</a>
+                <a class="post-author" href="#">{{ post.user.username }}</a>
                 <span class="post-date">{{ post.date_posted }}</span>
             </div>
         </div>
         <h2 class="post-title"><a href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
         <p class="post-content">{{ post.content }}</p>
+        <div class="post-actions">
+            <button type="button" class="btn btn-danger delete-post" data-post-id="{{ post.id }}">Delete</button>
+        </div>
     </article>
     {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
 {% endblock %}

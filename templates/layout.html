@@ -11,6 +11,7 @@
         <nav>
             <a class="brand" href="{{ url_for('home') }}">FastAPI Blog</a>
             <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('new_post') }}">New Post</a>
             <div class="nav-actions">
                 <a class="btn btn-outline" href="/login">Login</a>
                 <a class="btn btn-solid" href="/register">Register</a>
@@ -36,5 +37,7 @@
             </div>
         </aside>
     </div>
+
+    {% block scripts %}{% endblock %}
 </body>
 </html>

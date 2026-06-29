@@ -89,6 +89,71 @@ header nav {
     background: #e6e9ee;
 }
 
+.btn-danger {
+    background: transparent;
+    color: #f87171;
+    border: 1px solid #7f3838;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background: rgba(248, 113, 113, 0.12);
+    color: #fca5a5;
+}
+
+/* ---------- Post actions / form ---------- */
+.post-actions {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.post-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.post-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.post-form input,
+.post-form select,
+.post-form textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.post-form input:focus,
+.post-form select:focus,
+.post-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.post-form textarea {
+    resize: vertical;
+}
+
+.post-form .btn {
+    cursor: pointer;
+    border: none;
+    margin-right: 0.75rem;
+}
+
+.form-error {
+    color: #f87171;
+    margin: 0 0 1rem;
+}
+
 /* ---------- Layout ---------- */
 .container {
     max-width: 1140px;

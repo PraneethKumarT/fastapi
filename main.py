@@ -1,32 +1,27 @@
-from fastapi import FastAPI, Request, HTTPException, status
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from schemas import PostCreate, PostResponse
 
-app = FastAPI()
+from database import engine, Base
+from dependencies import templates
+from routers import pages, posts, users
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-
-posts: list[dict] = [
-    {
-        "id": 1,
-        "author": "Corey Schafer",
-        "title": "FastAPI is Awesome",
-        "content": "This framework is really easy to use and super fast.",
-        "date_posted": "April 20, 2025",
-    },
-    {
-        "id": 2,
-        "author": "Jane Doe",
-        "title": "Python is Great for Web Development",
-        "content": "Python is a great language for web development, and FastAPI makes it even better.",
-        "date_posted": "April 21, 2025",
-    },
-]
+app.mount("/media", StaticFiles(directory="media"), name="media")
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -41,6 +36,7 @@ def http_exception_handler(request: Request, exc: StarletteHTTPException):
         status_code=exc.status_code,
     )
 
+
 @app.exception_handler(RequestValidationError)
 def validation_exception_handler(request: Request, exc: RequestValidationError):
     if request.url.path.startswith("/api"):
@@ -52,42 +48,7 @@ def validation_exception_handler(request: Request, exc: RequestValidationError):
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
     )
 
-def find_post(post_id: int) -> dict:
-    for post in posts:
-        if post["id"] == post_id:
-            return post
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
 
-
-@app.get("/", include_in_schema=False, name="home")
-@app.get("/posts", include_in_schema=False, name="posts")
-def home(request: Request):
-    return templates.TemplateResponse(request=request, name="home.html", context={"posts": posts})
-
-
-@app.get("/post/{post_id}", include_in_schema=False, name="post")
-def post_detail(request: Request, post_id: int):
-    post = find_post(post_id)
-    return templates.TemplateResponse(request=request, name="post.html", context={"post": post})
-
-
-@app.get("/api/posts", response_model=list[PostResponse])
-def get_posts():
-    return posts
-
-@app.post("/api/posts", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
-def create_post(post: PostCreate):
-    new_post = {
-        "id": len(posts) + 1,
-        "author": post.author,
-        "title": post.title,
-        "content": post.content,
-        "date_posted": "June 18, 2026",
-    }
-    posts.append(new_post)
-    return new_post
-
-
-@app.get("/api/posts/{post_id}", response_model=PostResponse)
-def get_post(post_id: int):
-    return find_post(post_id)
+app.include_router(pages.router)
+app.include_router(posts.router)
+app.include_router(users.router)
